@@ -1,0 +1,19 @@
+[
+    {
+        "product_name": "Basketball",
+        "product_id": "basketball_ball",
+        "category": "basketball",
+        "category_icon": "🏀",
+        "price": 29.99,
+        "in_stock": true
+    },
+    {
+        "product_name": "Tennis Racket",
+        "product_id": "tennis_racket",
+        "category": "tennis",
+        "category_icon": "🎾",
+        "price": 29.99,
+        "in_stock": true
+    }
+
+]
