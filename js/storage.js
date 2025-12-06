@@ -11,11 +11,7 @@ function saveItemToCartStorage(product) {
     localStorage.setItem("productsInCart", JSON.stringify(cart));
 
 
-    // Recalculate total price and update it
-    
     updateCartCounter(calculateCartCheckoutPrice());
-
-
 
 };
 
@@ -25,126 +21,161 @@ function checkoutCartEvents() {
 
     checkoutTableBody.addEventListener("click", (event) => {
         const target = event.target;
-
         let cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
-
+        
+        // increase button was clicked
         if (target.classList.contains("product-increase-quantity")) {
             const id = target.dataset.id;
-            const item = cart.find(p => p.product_id === id);
-            if (!item) return;
 
-            item.quantity = (item.quantity || 1) + 1;
-            localStorage.setItem("productsInCart", JSON.stringify(cart));
+            const productToAdd = cart.find(p => p.product_id === id);
+            if (productToAdd) {
+                cart.push(productToAdd);
 
-            const qtySpan = document.getElementById(`qty-${id}`);
-            if (qtySpan) qtySpan.textContent = item.quantity;
+                localStorage.setItem("productsInCart", JSON.stringify(cart));
+            }
+
+            updateCheckoutCartList();
+            updateCartCounter(calculateCartCheckoutPrice());
         }
-
+    
+        // decrease btn was clicked
         if (target.classList.contains("product-decrease-quantity")) {
             const id = target.dataset.id;
-            const item = cart.find(p => p.product_id === id);
-            if (!item) return;
 
-            if (item.quantity > 1) {
-                item.quantity -= 1;
+            const index = cart.findIndex(p => p.product_id === id);
+            if (index !== -1) {
+                cart.splice(index, 1);
                 localStorage.setItem("productsInCart", JSON.stringify(cart));
-
-                const qtySpan = document.getElementById(`qty-${id}`);
-                if (qtySpan) qtySpan.textContent = item.quantity;
             }
+
+            updateCheckoutCartList();
+            updateCartCounter(calculateCartCheckoutPrice());
         }
 
+        // user deleted product from cart
         if (target.classList.contains("delete-item")) {
             const id = target.dataset.id;
+
             cart = cart.filter(p => p.product_id !== id);
             localStorage.setItem("productsInCart", JSON.stringify(cart));
 
-            const row = document.getElementById(`checkout-item-${id}`);
-            if (row) row.remove();
+            updateCheckoutCartList();
+            updateCartCounter(calculateCartCheckoutPrice());
         }
     });
 }
 
 
 
+// this just updates the table of products on cart.html
 function updateCheckoutCartList() {
-
-    console.log("Updating checkout list with each product in cart...");
 
     const checkoutTableBody = document.getElementById("checkout-table-rows");
 
-    // make sure table is empty before adding items again
     checkoutTableBody.innerHTML = "";
 
     const cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
 
     if (cart.length === 0) {
-        console.log("No saved products are in cart.. Not adding anything to checkout list");
         return;
     }
 
-    cart.forEach(product => {
+    // one per product
+    const grouped = {};
 
+    // get the quantity of each product in the cart
+    for (let i = 0; i < cart.length; i++) {
+        const item = cart[i];
+
+        // make a new dict if it's a unqiue prodct
+        if (!grouped[item.product_id]) {
+
+            grouped[item.product_id] = {
+                product_id: item.product_id,
+                name: item.product_name,
+                image: item.product_image,
+                category: item.category,
+                price: item.price,
+                quantity: 1
+            };
+
+        } 
+        
+        // if not just += 1 to quantity since it already exists
+        else {
+            grouped[item.product_id].quantity++;
+        }
+    }
+
+
+    // finally make a row for each product for cart.html
+    for (let id in grouped) {
+        const product = grouped[id];
 
         const row = document.createElement("tr");
         row.id = `checkout-item-${product.product_id}`;
 
-        row.innerHTML = `
-            <td class="px-4 py-3 font-medium">${product.product_name}</td>
+        row.innerHTML = 
+        `
+            <td class="px-4 py-3 font-medium">${product.name}</td>
 
             <td class="px-4 py-3">
-                <img src="images/${product.product_image}" class="w-12 h-12 object-cover rounded">
+                <img src="images/${product.image}" class="w-12 h-12 object-cover rounded">
             </td>
 
-            <td class="px-4 py-3">
-                ${product.category.toUpperCase()}
-            </td>
+            <td class="px-4 py-3">${product.category.toUpperCase()}</td>
 
             <td class="px-4 py-3">$${product.price.toFixed(2)}</td>
 
             <td class="px-4 py-3">
                 <div class="flex items-center gap-2">
-                    <button class="px-2 py-1 bg-gray-200 rounded product-decrease-quantity" data-id="${product.product_id}">-</button>
+                    <button 
+                        class="px-2 py-1 bg-gray-200 rounded product-decrease-quantity" 
+                        data-id="${product.product_id}">
+                        -
+                    </button>
 
-                    <span class="min-w-6 text-center font-semibold" id="qty-${product.product_id}">${product.quantity}</span>
+                    <span 
+                        class="min-w-6 text-center font-semibold" 
+                        id="qty-${product.product_id}">
+                        ${product.quantity}
+                    </span>
 
-                    <button class="px-2 py-1 bg-gray-200 rounded product-increase-quantity" data-id="${product.product_id}">+</button>
+                    <button 
+                        class="px-2 py-1 bg-gray-200 rounded product-increase-quantity" 
+                        data-id="${product.product_id}">
+                        +
+                    </button>
                 </div>
             </td>
 
             <td class="px-4 py-3">
-                <button class="px-3 py-1 bg-red-500 text-white rounded delete-item"
-                        data-id="${product.product_id}">
+                <button 
+                    class="px-3 py-1 bg-red-500 text-white rounded delete-item"
+                    data-id="${product.product_id}">
                     Delete
                 </button>
             </td>
         `;
 
         checkoutTableBody.appendChild(row);
-
-    });
-
+    }
 }
+
+
 
 
 
 
 function calculateCartCheckoutPrice() {
-
-    console.log("Calcating tiotal checkout price..");
     const cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
+    let total = 0;
 
-    console.log(`There are ${cart.length} items in the cart.`)
+    cart.forEach(item => total += item.price);
 
-    let totalPrice = 0;
-
-    cart.forEach(product => {
-        console.log(`Product ${product.product_name} price: ${product.price}`);
-        totalPrice += product.price;
-    });
-    
-    return totalPrice.toFixed(2);
+    return total.toFixed(2);
 }
+
 
 
 function updateCartCounter(totalCheckoutPrice) {

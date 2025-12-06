@@ -90,6 +90,146 @@ const products = [
 
 
 
+function getItemQuantity(productId) {
+    const cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
+    const items = cart.filter(p => p.product_id === productId);
+    return items.length; 
+}
+
+function increaseProductQuantity(product) {
+    const cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
+    cart.push(product);
+    localStorage.setItem("productsInCart", JSON.stringify(cart));
+}
+
+function decreaseProductQuantity(productId) {
+    let cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
+    
+    // remove the first product we find with that id, it really dont matter
+    const removeIndex = cart.findIndex(p => p.product_id === productId);
+    if (removeIndex !== -1) {
+        cart.splice(removeIndex, 1);
+    }
+
+    localStorage.setItem("productsInCart", JSON.stringify(cart));
+}
+
+
+function checkIfCartIsEmpty() {
+    const cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
+    if (cart.length === 0) {
+        alert("Your shopping cart is empty! You cannot checkout!");
+    }
+
+    else {
+        window.location.href = "checkout.html";
+    }
+}
+
+
+function checkoutFormSubmitCart() {
+
+
+
+	let first_name = document.forms["checkoutForm"]["first_name"].value;
+	let last_name = document.forms["checkoutForm"]["last_name"].value;
+
+    let email = document.forms["checkoutForm"]["email"].value;
+	let phone = document.forms["checkoutForm"]["phone"].value;
+	let address = document.forms["checkoutForm"]["address"].value;
+	let city = document.forms["checkoutForm"]["city"].value;
+	let zip = document.forms["checkoutForm"]["zip"].value;
+	let card_number = document.forms["checkoutForm"]["card_number"].value;
+	let expiration_date = document.forms["checkoutForm"]["expiration_date"].value;
+    let cvv = document.forms["checkoutForm"]["cvv"].value;
+
+    const orderedCart = JSON.parse(localStorage.getItem("productsInCart")) || [];
+    const orderDetails = {
+        first_name: first_name,
+        last_name: last_name,
+        email: email,   
+        phone: phone,
+        address: address,
+        city: city,
+        zip: zip,
+        card_number: card_number,
+        expiration_date: expiration_date,
+        cvv: cvv,
+        cart: orderedCart
+    };
+
+    console.log("Order details:");
+    console.log(JSON.stringify(orderDetails));
+
+
+
+
+
+
+    console.log("Checkoutform was sumbmitterd!");
+    console.log(first_name + " " + last_name);    
+
+
+}
+
+
+// updates the table of products on checkouth.tml (the bttm summary section)
+function renderCheckoutSummary() {
+
+    // Make sure we're on the checkout page
+    const summaryRows = document.getElementById("checkout-summary-rows");
+    const summaryTotal = document.getElementById("checkout-summary-total");
+
+    if (!summaryRows) return;
+
+    const cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
+
+    const grouped = {};
+    for (let i = 0; i < cart.length; i++) {
+        const item = cart[i];
+
+        // new dict sine it doesn't exist yet
+        if (!grouped[item.product_id]) {
+            grouped[item.product_id] = {
+                name: item.product_name,
+                price: item.price,
+                quantity: 1
+            };
+        } 
+        
+        // already exist so just add 1 to quantity
+        else {
+            grouped[item.product_id].quantity++;
+        }
+    }
+
+    summaryRows.innerHTML = "";
+
+    let total = 0;
+
+    // add each prodct to the summary on checkout.html
+    for (let id in grouped) {
+        const product = grouped[id];
+
+        const row = document.createElement("tr");
+        row.innerHTML = 
+        `
+            <td class="py-2">${product.name}</td>
+            <td class="py-2">${product.quantity}</td>
+            <td class="py-2">$${(product.price * product.quantity).toFixed(2)}</td>
+        `;
+
+        summaryRows.appendChild(row);
+
+        total += product.price * product.quantity;
+    }
+
+    // just to make sure the total is a float
+    summaryTotal.textContent = total.toFixed(2);
+}
+
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -109,6 +249,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (checkoutTableBody != null)  {
         checkoutCartEvents();
         updateCheckoutCartList();
+    }
+
+
+    // same idea here, only run this code if we're on checkout.html
+    const checkoutSummary = document.getElementById("checkout-summary");
+    if (checkoutSummary) {
+        renderCheckoutSummary();
     }
 
 
@@ -164,15 +311,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="text-gray-700 font-semibold mb-3 text-xl">$${productPrice.toFixed(2)}</div>
 
 
-                    <div id="addToCartButton-${productId}" class="flex items-center space-x-1.5 bg-white hover:cursor-pointer hover:bg-gray-200/30 border border-gray-300 px-2 py-2.5 text-sm rounded-md">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg>
-                        </div>
-                        <div>Add to cart</div>
+                        <div id="qtyContainer-${productId}" class="flex items-center space-x-2">
+                            
+                            <button 
+                                class="product-decrease bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-lg font-semibold" 
+                                data-id="${productId}">
+                                -
+                            </button>
 
-                    </div>
+                            <span 
+                                id="productQty-${productId}" 
+                                class="min-w-6 text-center font-semibold">
+                                0
+                            </span>
+
+                            <button 
+                                class="product-increase bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-lg font-semibold" 
+                                data-id="${productId}">
+                                +
+                            </button>
+
+                        </div>
+
                 </div>
 
 
@@ -208,20 +368,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
             productGrid.appendChild(row);
 
-            const addToCartButton = document.getElementById(`addToCartButton-${productId}`);
-            addToCartButton.addEventListener("click", (e) => {
 
-                console.log("Product was added to cart: " + productId);
-                console.log(e);
+            // old logic, now we add products to cart based on the quantity counter
+            // const addToCartButton = document.getElementById(`addToCartButton-${productId}`);
+            // addToCartButton.addEventListener("click", (e) => {
 
-                // Update local storage cart with the product whose "Add to cart" btn was clicked
-                saveItemToCartStorage(product);
+            //     console.log("Product was added to cart: " + productId);
+            //     console.log(e);
+
+            //     // Update local storage cart with the product whose "Add to cart" btn was clicked
+            //     saveItemToCartStorage(product);
 
 
+            // });
+
+
+            const qtySpan = document.getElementById(`productQty-${productId}`);
+            const decreaseBtn = rowBody.querySelector(`.product-decrease[data-id="${productId}"]`);
+            const increaseBtn = rowBody.querySelector(`.product-increase[data-id="${productId}"]`);
+
+            qtySpan.textContent = getItemQuantity(productId);
+
+            increaseBtn.addEventListener("click", () => {
+                increaseProductQuantity(product);
+                qtySpan.textContent = getItemQuantity(productId);
+
+                updateCartCounter(calculateCartCheckoutPrice());
+            });
+
+            decreaseBtn.addEventListener("click", () => {
+                decreaseProductQuantity(productId);
+                qtySpan.textContent = getItemQuantity(productId);
+
+                updateCartCounter(calculateCartCheckoutPrice());
             });
 
 
-            // Find each product's description toggler and set its onClick to show/hide and change chevroniIcon
+
             const descriptionToggler = document.getElementById(`product-description-switch-${productId}`);
             const descriptionContent = document.getElementById(`product-description-content-${productId}`);
             const descriptionIcon = descriptionToggler.querySelector(".chevron-icon");
@@ -263,19 +446,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     }
-
-
-
-
-
-
-    // I tried fetching the products this way through a JSON file, but it doesn't work without running the HTML file through an actual local web server
-    // Because CORS blocks the fetch 
-    // fetch("./products.json")
-    // .then(response => response.json())
-    // .then(products => {
-        
-    // })
 
 
 
