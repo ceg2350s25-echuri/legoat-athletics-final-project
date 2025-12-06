@@ -1,12 +1,14 @@
 
+
+// i didn't end up using "category_icon" because i could not get emojis to load properly in this websitee/project for some reason
 const products = [
     {
         product_name: "Basketball",
         product_id: "basketball_ball",
         product_image: "basketball-image.png",
-        product_description: 
+        product_description:
         `
-        This Basketball is signed by the LeGoat himself (Lebron James), play like the KING using this basketball!
+            This Basketball is signed by the LeGoat himself (Lebron James), play like the KING using this basketball!
         `,
         color: "orange",
         category: "basketball",
@@ -86,6 +88,104 @@ const products = [
         in_stock: true
     },
 
+    {
+        product_name: "Mini Basketball Hoop",
+        product_id: "basketball_minihoop",
+        product_image: "mini-hoop.jpg",
+        product_description: `
+            A basketball hoop for when you need to dunk on your little brother.
+        `,
+        color: "orange",
+        category: "basketball",
+        category_icon: "🏀",
+        price: 19.99,
+        in_stock: true
+    },
+    {
+        product_name: "Basketball Headband",
+        product_id: "basketball_headband",
+        product_image: "basketball-headband.png",
+        product_description: `
+            Headband that *might* make you feel like you're in your prime. No guarantees.
+        `,
+        color: "red",
+        category: "basketball",
+        category_icon: "🏀",
+        price: 9.99,
+        in_stock: true
+    },
+
+    {
+        product_name: "Soccer Cleats",
+        product_id: "soccer_cleats",
+        product_image: "soccer-cleats.jfif",
+        product_description: `
+            Lightweight cleats designed to help you outrun your defenders.
+        `,
+        color: "black",
+        category: "soccer",
+        category_icon: "⚽",
+        price: 49.99,
+        in_stock: true
+    },
+    {
+        product_name: "Goalkeeper Gloves",
+        product_id: "soccer_gloves",
+        product_image: "soccer-gloves.jfif",
+        product_description: `
+            Catch the ball easily with these gloves. Like Harry Potter in Quidditch!
+        `,
+        color: "black",
+        category: "soccer",
+        category_icon: "⚽",
+        price: 34.99,
+        in_stock: true
+    },
+
+
+    {
+        product_name: "Tennis Balls (Pack of 3)",
+        product_id: "tennis_balls",
+        product_image: "tennis-ball.png",
+        product_description: `
+            Just a normal tennis ball, your dog might eat it though! BE careful!
+        `,
+        color: "yellow",
+        category: "tennis",
+        category_icon: "🎾",
+        price: 8.99,
+        in_stock: true
+    },
+    {
+        product_name: "Golf Balls (Pack of 12)",
+        product_id: "golf_balls",
+        product_image: "golf-ball.jpg",
+        product_description: `
+            Tiger Woods loves these golf balls. You should too if he trusts these balls to win him championships!
+        `,
+        color: "white",
+        category: "golf",
+        category_icon: "⛳",
+        price: 6.99,
+        in_stock: true
+    },
+    {
+        product_name: "Golf Glove",
+        product_id: "golf_glove",
+        product_image: "golf-gloves.jpg",
+        product_description: `
+            Comfortable glove to help you golf better. Trusted by Tiger Woods himself.
+        `,
+        color: "white",
+        category: "golf",
+        category_icon: "⛳",
+        price: 14.99,
+        in_stock: true
+    },
+
+
+
+
 ];
 
 
@@ -106,7 +206,7 @@ function increaseProductQuantity(product) {
 function decreaseProductQuantity(productId) {
     let cart = JSON.parse(localStorage.getItem("productsInCart")) || [];
     
-    // remove the first product we find with that id, it really dont matter
+    // remove the first product we find with that id
     const removeIndex = cart.findIndex(p => p.product_id === productId);
     if (removeIndex !== -1) {
         cart.splice(removeIndex, 1);
@@ -140,12 +240,19 @@ function autoFillCheckoutForm() {
         
         // set all the inputs with the saved values frfom localsStorage
         if (document.getElementById("first_name")) {
+            
             document.getElementById("first_name").value = savedInfo.first_name || "";
+
             document.getElementById("last_name").value = savedInfo.last_name || "";
+
             document.getElementById("email").value = savedInfo.email || "";
+            
             document.getElementById("phone").value = savedInfo.phone || "";
+
             document.getElementById("address").value = savedInfo.address || "";
+
             document.getElementById("city").value = savedInfo.city || "";
+
             document.getElementById("zip").value = savedInfo.zip || "";
 
 
@@ -215,7 +322,7 @@ function checkoutFormSubmitCart() {
 }
 
 
-// updates the table of products on checkouth.tml (the bttm summary section)
+// updates the table of products on checkouth.tml (the bottom summary section)
 function renderCheckoutSummary() {
 
     // Make sure we're on the checkout page
