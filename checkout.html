@@ -87,16 +87,132 @@
                     
                     <div class="flex flex-col space-y-2">
                         <div class="text-3xl font-semibold text-gray-900">
-                            Popular LeGoat Athletics Products
+                            Ready to checkout your shopping cart?
                         </div>
 
                         <div class="font-medium text-xl text-gray-400">
-                            Here are our most sold products, ranging from sports like soccer to basketball
-
+                            Complete the form below to finalize your purchase!
                         </div>
 
 
                     </div>
+
+                    
+                    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        
+                        <!-- first col is the checkout form inputs -->
+                        <form
+                            name="checkoutForm"
+                            id="checkoutForm"
+                            onsubmit="event.preventDefault(); checkoutFormSubmitCart();"
+                            class="pb-8 space-y-6 max-w-xl"
+                        >
+                            
+                            <div class="flex flex-col space-y-2">
+                                <label class="text-lg font-medium text-gray-800">First Name</label>
+
+                                <input type="text" name="first_name" id="first_name" class="border border-gray-300 rounded-md p-2" required />
+                                
+                                <label class="text-lg font-medium text-gray-800 mt-3">Last Name</label>
+                                
+                                <input type="text" name="last_name" id="last_name" class="border border-gray-300 rounded-md p-2" required />
+                            </div>
+
+                            <div>
+                                <label class="text-lg font-medium text-gray-800">Email</label>
+                                
+                                <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
+                            </div>
+
+                            <div>
+                                <label class="text-lg font-medium text-gray-800">Phone Number</label>
+                               
+                               
+                                <input type="tel" name="phone" id="phone" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="937-520-5783" required />
+                            </div>
+
+                            <div>
+                                <label class="text-lg font-medium text-gray-800">Street Address</label>
+                                
+                                <input type="text" name="address" id="address" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
+                            </div>
+
+                            <div>
+                                <label class="text-lg font-medium text-gray-800">City</label>
+                                
+                                
+                                <input type="text" name="city" id="city" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+
+                                <div>
+                                    <label class="text-lg font-medium text-gray-800">ZIP Code</label>
+                                    
+                                    <input type="text" name="zip" id="zip" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
+                                </div>
+
+                            </div>
+
+                            <div class="mt-6 space-y-3">
+                                <div>
+
+                                    <label class="text-lg font-medium text-gray-800">Credit Card Number</label>
+
+                                    <input type="text" name="card_number" id="card_number" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="" required />
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+
+                                    <div>
+
+                                        <label class="text-lg font-medium text-gray-800">Expiration Date</label>
+                                        <input type="text" name="expiration_date" id="expiration_date" class="mt-1 block w-full border border-gray-300 rounded-md p-2" maxlength="5" placeholder="MM/YY" required />
+                                    </div>
+
+                                    <div>
+                                        <label class="text-lg font-medium text-gray-800">CVV Code</label>
+                                        <input type="text" name="cvv" id="cvv" maxlength="4" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                            
+                            <!-- i made this full width, bc all that empty white space felt weird -->
+                            <button type="submit" class="shadow-xs hover:cursor-pointer w-full mt-6 bg-white hover:bg-gray-100 px-4 py-2 border border-gray-300 rounded-lg text-md">
+                                Purchase your cart
+                            </button>
+
+
+                        </form>
+
+                            
+                        <!-- second col is a summary of the order / all the items in the user's cart -->
+                        <div id="checkout-summary" class="border border-gray-300 rounded-xl shadow-sm p-4 h-fit">
+                            <h2 class="text-xl font-semibold mb-4">Your Order Summary</h2>
+
+                            <table class="w-full text-left" id="checkout-summary-table">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="py-2">Product</th>
+                                        <th class="py-2">Qty</th>
+                                        <th class="py-2">Price</th>
+                                    </tr>
+                                </thead>
+
+                                <!-- renderCheckoutSummary() then adds each product saved in our cart here -->
+                                <tbody id="checkout-summary-rows">
+                                </tbody>
+                            </table>
+
+                            <div class="mt-4 text-lg font-semibold">
+                                Total: $<span id="checkout-summary-total">0.00</span>
+                            </div>
+                        </div>
+
+                    </div>
+
 
 
                 </div>

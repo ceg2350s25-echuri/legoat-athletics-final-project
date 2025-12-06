@@ -84,19 +84,36 @@
                 </div>
 
                 <div class="px-12 mt-12">
+
+                    <div class="flex justify-between">
+
+                        <div class="flex flex-col space-y-2">
+                            <div class="text-3xl font-semibold text-gray-900">
+                                Shopping Cart
+                            </div>
+
+                            <div class="font-medium text-xl text-gray-400">
+                                Manage products in your shopping cart before you checkout
+
+                            </div>
+
+
+                        </div>
+
+
                     
-                    <div class="flex flex-col space-y-2">
-                        <div class="text-3xl font-semibold text-gray-900">
-                            Shopping Cart
+                        <div class="flex items-center">
+                            <button
+                                onclick="checkIfCartIsEmpty();"
+                                class="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 
+                                    text-black font-medium border border-gray-300 hover:bg-gray-200/30 hover:cursor-pointer">
+                                <span id="cartItemCount">Continue to checkout</span>
+                            </button>
                         </div>
-
-                        <div class="font-medium text-xl text-gray-400">
-                            Manage products in your shopping cart before you checkout
-
-                        </div>
-
 
                     </div>
+                    
+
 
 
                     <!-- List of products in the cart -->
