@@ -31,11 +31,16 @@ For headings, text, etc. colors I used the default Tailwind color classes, (text
 ## Features
 
 
+The products are categorized by sport in products.html page. In index.html they are loaded without any categorization in just one big grid. All products are loaded from an array in the app.js file. You can customize the color, the name, description, etc of products by changing the values in the array!
+
+
+The checkout form is autofilled with contact information. This info is saved in localStorage so whenever you come back to the checkout page after already submitting it once, the input forms will automatically be filled in with the previous information you submitted!
+
+
+A summary of your cart is shown right before you submit the checkout page on checkout.html 
+
+Your cart also updates the total price any time you add or remove a quantity of any item
 
 
 
-
-## Creative things I added
-
-- Dark/Light mode toggle switch
 
