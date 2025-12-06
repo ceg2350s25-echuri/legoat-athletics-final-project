@@ -126,11 +126,44 @@ function checkIfCartIsEmpty() {
     }
 }
 
+function autoFillCheckoutForm() {
+
+
+    // check if info is alreday saved from previous checkout
+    const savedInfoJSON = localStorage.getItem("savedCheckoutInfo");
+
+    if (savedInfoJSON) {
+
+        console.log("Found saved checkout info!");
+        const savedInfo = JSON.parse(savedInfoJSON);
+        
+        // set all the inputs with the saved values frfom localsStorage
+        if (document.getElementById("first_name")) {
+            document.getElementById("first_name").value = savedInfo.first_name || "";
+            document.getElementById("last_name").value = savedInfo.last_name || "";
+            document.getElementById("email").value = savedInfo.email || "";
+            document.getElementById("phone").value = savedInfo.phone || "";
+            document.getElementById("address").value = savedInfo.address || "";
+            document.getElementById("city").value = savedInfo.city || "";
+            document.getElementById("zip").value = savedInfo.zip || "";
+
+
+        }
+    }
+
+    else {
+        console.log("Checkout info not save in localStorage")
+    }
+
+
+
+}
+
 
 function checkoutFormSubmitCart() {
 
 
-
+    // i saved everything but credit card info in localStorage bc why would u do that fr lol
 	let first_name = document.forms["checkoutForm"]["first_name"].value;
 	let last_name = document.forms["checkoutForm"]["last_name"].value;
 
@@ -139,9 +172,7 @@ function checkoutFormSubmitCart() {
 	let address = document.forms["checkoutForm"]["address"].value;
 	let city = document.forms["checkoutForm"]["city"].value;
 	let zip = document.forms["checkoutForm"]["zip"].value;
-	let card_number = document.forms["checkoutForm"]["card_number"].value;
-	let expiration_date = document.forms["checkoutForm"]["expiration_date"].value;
-    let cvv = document.forms["checkoutForm"]["cvv"].value;
+
 
     const orderedCart = JSON.parse(localStorage.getItem("productsInCart")) || [];
     const orderDetails = {
@@ -161,13 +192,18 @@ function checkoutFormSubmitCart() {
     console.log("Order details:");
     console.log(JSON.stringify(orderDetails));
 
+    // make sure each time the user checks out we overwrite the last saved info wiuth the current one
+    localStorage.setItem("savedCheckoutInfo", JSON.stringify(orderDetails));
+
+    console.log("Checkout form was submitted! And saved in localStorage for the user: ");
+    console.log(first_name + " " + last_name);
+
+    alert("Thank you for your order, " + first_name + "! Your order has been placed successfully.");
 
 
-
-
-
-    console.log("Checkoutform was sumbmitterd!");
-    console.log(first_name + " " + last_name);    
+    // clear the cart now that the user finished ordering and redirdct back to indesx
+    localStorage.removeItem("productsInCart");  
+    document.location.href = "index.html";
 
 
 }
@@ -256,12 +292,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkoutSummary = document.getElementById("checkout-summary");
     if (checkoutSummary) {
         renderCheckoutSummary();
+        autoFillCheckoutForm();
     }
 
+    
 
 
-    const productGrid = document.getElementById("product-grid");
 
+    const productGrid = document.getElementById("main-product-grid");
+
+    // for loading products onto index.html
     if (productGrid != null) {
         console.log("Found product grid: " + productGrid.id);
 
@@ -443,6 +483,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         })
+
+
+    }
+
+
+    // for loading products onto products.html (separated onto diff rows by sports type/category)
+
+    else {
+        const separatedProductGrid = document.getElementById("separated-product-grid");
+
+
 
 
     }
