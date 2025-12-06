@@ -85,6 +85,7 @@ const products = [
         price: 29.99,
         in_stock: true
     },
+
 ];
 
 
@@ -160,6 +161,9 @@ function autoFillCheckoutForm() {
 }
 
 
+
+
+
 function checkoutFormSubmitCart() {
 
 
@@ -198,7 +202,9 @@ function checkoutFormSubmitCart() {
     console.log("Checkout form was submitted! And saved in localStorage for the user: ");
     console.log(first_name + " " + last_name);
 
-    alert("Thank you for your order, " + first_name + "! Your order has been placed successfully.");
+    let total_charge = calculateCartCheckoutPrice();
+
+    alert("Thank you for your order, " + first_name + "! Your order has been placed successfully. Your card was charged for $" + total_charge + ".");
 
 
     // clear the cart now that the user finished ordering and redirdct back to indesx
@@ -264,6 +270,92 @@ function renderCheckoutSummary() {
     summaryTotal.textContent = total.toFixed(2);
 }
 
+
+
+// Loads the products onto products.html, sep by category
+function loadProductsByCategory() {
+    const container = document.getElementById("separated-product-grid");
+
+    // make sure we on products.html
+    if (!container) {
+        return;
+    }
+
+    console.log("Loading products onto products.html...");
+
+    // Iterate through products and add them to the right cat section
+    products.forEach(product => {
+
+        const section = document.getElementById(`category-${product.category}`);
+
+        // no existing html category found for the product? shouldnt happen but just i ncase
+        if (!section) {
+            return;
+        }
+
+        const card = document.createElement("div");
+        card.className = "border border-gray-300 rounded-xl p-4 shadow-sm space-y-4";
+
+
+        // this is basically the as the one on index.html, changed it up a little
+        card.innerHTML = 
+        `
+            <h3 class="text-lg font-semibold">${product.product_name}</h3>
+
+            <div class="flex justify-center py-4">
+                <img src="images/${product.product_image}" class="w-24 h-24" />
+            </div>
+
+            <div class="text-gray-700 font-semibold text-xl">
+                $${product.price.toFixed(2)}
+            </div>
+
+            <div class="flex items-center justify-between">
+
+                <div class="px-2 py-1 border border-gray-300 rounded-xl text-sm font-semibold">
+                    ${product.category.toUpperCase()}
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button class="product-decrease bg-gray-200 px-2 py-1 rounded" data-id="${product.product_id}">-</button>
+                    <span id="productQty-${product.product_id}" class="font-semibold">0</span>
+                    <button class="product-increase bg-gray-200 px-2 py-1 rounded" data-id="${product.product_id}">+</button>
+                </div>
+
+            </div>
+        `;
+
+        section.appendChild(card);
+
+        // attach event listeners for the increase and decrease quantity buttons
+        const qtySpan = card.querySelector(`#productQty-${product.product_id}`);
+        const decreaseBtn = card.querySelector(`.product-decrease[data-id="${product.product_id}"]`);
+        const increaseBtn = card.querySelector(`.product-increase[data-id="${product.product_id}"]`);
+
+        qtySpan.textContent = getItemQuantity(product.product_id);
+
+        increaseBtn.addEventListener("click", () => {
+
+            increaseProductQuantity(product);
+
+            qtySpan.textContent = getItemQuantity(product.product_id);
+            updateCartCounter(calculateCartCheckoutPrice());
+
+            
+        });
+
+        decreaseBtn.addEventListener("click", () => {
+
+            decreaseProductQuantity(product.product_id);
+
+            qtySpan.textContent = getItemQuantity(product.product_id);
+            updateCartCounter(calculateCartCheckoutPrice());
+
+        });
+
+
+    });
+}
 
 
 
@@ -489,12 +581,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // for loading products onto products.html (separated onto diff rows by sports type/category)
-
     else {
-        const separatedProductGrid = document.getElementById("separated-product-grid");
-
-
-
+        loadProductsByCategory();
 
     }
 
