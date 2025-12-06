@@ -20,6 +20,7 @@ For icon colors, I just copied the color code straight from [Tailwind Color Code
         - Shopping cart icon
         - Magnifying glass icon
         - Menu bar for mobile Navbar
+        - Chevron right and Chevron down (for closed and opened descriptions respectively)
 
 
 

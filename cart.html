@@ -1,0 +1,152 @@
+
+<html>
+
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+        
+        <!-- Google font for emojis -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+
+
+
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+
+
+    <body>
+        
+        <div class="min-h-screen flex flex-col">
+            <div class="flex-1">
+                <div class="bg-white shadow-sm">
+                    <div class="lg:mx-16 md:mx-12 sm:mx-6 mx-4">
+
+                        <div class="grid grid-cols-2 lg:grid-cols-3 items-center h-16">
+
+                            <div class="flex items-center space-x-3 min-w-0">
+                                <a href="index.html" class="inline-flex items-center space-x-3">
+                                    <img class="h-10 w-10 shrink-0" src="images/legoat-atheltics-icon.png">
+                                    <div class="text-lg md:text-xl font-bold truncate">
+                                        LeGoat Athletics Shop
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="hidden lg:flex justify-center space-x-8">
+                                <a href="index.html" class="text-md font-medium text-gray-900">Home</a>
+                                <a href="product.html" class="text-md font-medium text-gray-500 hover:text-gray-700">Products</a>
+                                <a href="#" class="text-md font-medium text-gray-500 hover:text-gray-700">Our Story</a>
+                            </div>
+
+                            <div class="flex justify-end items-center space-x-4">
+                               
+                                
+                                <a 
+                                    href="cart.html"
+                                    class="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 
+                                        text-black font-medium border border-gray-300 hover:bg-gray-200/30 hover:cursor-pointer">
+                                    
+                                    <!-- Shopping Cart Icon (from HeroIcons) -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="black" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                    </svg>
+
+                                    <span id="cartItemCount">Checkout 0 items</span>
+                                </a>
+
+
+
+                                    
+                                <button id="mobile-nav-button" type="button" class="hover:cursor-pointer lg:hidden p-2 rounded-md text-gray-400 hover:bg-gray-100">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- I wasn't sure if the final project website was supposed to be responsive, but i just added a mobile menu with tailwid -->
+                    <div class="lg:hidden" id="navbar-dropdown">
+                        <div class="space-y-1 pb-3 pt-2">
+                            <a href="index.html" class="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700">Home</a>
+                            <a href="product.html" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">Products</a>
+                            <a href="#" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">Our Story</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-12 mt-12">
+                    
+                    <div class="flex flex-col space-y-2">
+                        <div class="text-3xl font-semibold text-gray-900">
+                            Shopping Cart
+                        </div>
+
+                        <div class="font-medium text-xl text-gray-400">
+                            Manage products in your shopping cart before you checkout
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- List of products in the cart -->
+                    <div class="block mt-8">
+                        <div class="space-y-3" id="checkout-products-list">
+
+                            <table class="table-auto w-full " id="checkout-table">
+
+                                <thead>
+                                    <tr class="bg-gray-50 text-left">
+                                        <th class="px-4 py-2">Name</th>
+                                        <th class="px-4 py-2">Image</th>
+                                        <th class="px-4 py-2">Category</th>
+                                        <th class="px-4 py-2">Price</th>
+                                        <th class="px-4 py-2">Quantity</th>
+                                        <th class="px-4 py-2">Delete</th>
+                                    </tr>
+                                </thead>    
+
+
+                                <!-- Table rows are added with JS based on each product in the cart saved in localStorage-->
+                                <tbody id="checkout-table-rows" class="divide-gray-100 divide-y-2">
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script src="js/storage.js"></script>
+        <script src="js/app.js"></script>
+
+        <!-- Tailwind config code is from: https://github.com/tailwindlabs/tailwindcss/issues/12871#issuecomment-1925317188 -->
+        <!-- Enables dark mode using the "dark:" class -->
+        <script> 
+        tailwind.config = {
+            darkMode: 'class', 
+        }
+
+        </script>
+
+
+
+    </body>
+
+
+</html>
