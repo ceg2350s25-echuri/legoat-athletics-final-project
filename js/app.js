@@ -279,6 +279,8 @@ function checkoutFormSubmitCart() {
 	let last_name = document.forms["checkoutForm"]["last_name"].value;
 
     let email = document.forms["checkoutForm"]["email"].value;
+
+
 	let phone = document.forms["checkoutForm"]["phone"].value;
 	let address = document.forms["checkoutForm"]["address"].value;
 	let city = document.forms["checkoutForm"]["city"].value;

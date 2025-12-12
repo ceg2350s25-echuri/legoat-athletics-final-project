@@ -128,7 +128,10 @@
                                 <label class="text-lg font-medium text-gray-800">Phone Number</label>
                                
                                
-                                <input type="tel" name="phone" id="phone" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="937-520-5783" required />
+                                <input 
+                                    placeholder="937-520-5783"
+                                    pattern="\d{3}-\d{3}-\d{4}"
+                                    type="tel" name="phone" id="phone" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="937-520-5783" required />
                             </div>
 
                             <div>
@@ -149,7 +152,9 @@
                                 <div>
                                     <label class="text-lg font-medium text-gray-800">ZIP Code</label>
                                     
-                                    <input type="text" name="zip" id="zip" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
+                                    <input 
+                                        pattern="\d{5}"
+                                        type="text" name="zip" id="zip" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
                                 </div>
 
                             </div>
@@ -159,7 +164,10 @@
 
                                     <label class="text-lg font-medium text-gray-800">Credit Card Number</label>
 
-                                    <input type="text" name="card_number" id="card_number" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="" required />
+                                    <input 
+                                        pattern="\d{13,19}"
+                                        required
+                                        type="text" name="card_number" id="card_number" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="" required />
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-4">
@@ -167,7 +175,9 @@
                                     <div>
 
                                         <label class="text-lg font-medium text-gray-800">Expiration Date</label>
-                                        <input type="text" name="expiration_date" id="expiration_date" class="mt-1 block w-full border border-gray-300 rounded-md p-2" maxlength="5" placeholder="MM/YY" required />
+                                        <input 
+                                            pattern="(0[1-9]|1[0-2])\/\d{2}"
+                                            type="text" name="expiration_date" id="expiration_date" class="mt-1 block w-full border border-gray-300 rounded-md p-2" maxlength="5" placeholder="MM/YY" required />
                                     </div>
 
                                     <div>
